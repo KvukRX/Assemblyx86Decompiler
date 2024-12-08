@@ -1,8 +1,5 @@
 .model tiny
 .386
-.data
-A db 12h
-B dw 1234h
 .code
 org 100h   
 start:
@@ -75,7 +72,4 @@ db 70h,00h ;JO
 db 7Ah,00h ;JP or JPE
 db 78h,00h ;JS
 
-
-mov ah, 4ch
-int 21h
 end start
