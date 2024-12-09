@@ -3,6 +3,8 @@
 .code
 org 100h   
 start:
+lodsb
+
 ;////////////////////////////// btr r16,imm8
 btr ax,1
 btr bx,1
@@ -54,7 +56,6 @@ btr [si],cx
 
 ;////////////////////////////// short jcc
 
-db 77h,00h ;JA or JNBE
 db 73h,00h ;JAE or JNB or JNC
 db 72h,00h ;JB or JC or JNAE
 db 76h,00h ;JBE or JNA
@@ -71,5 +72,5 @@ db 79h,00h ;JNS
 db 70h,00h ;JO
 db 7Ah,00h ;JP or JPE
 db 78h,00h ;JS
-
+db 77h,00h ;JA or JNBE   
 end start
