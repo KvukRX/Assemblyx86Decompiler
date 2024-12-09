@@ -45,6 +45,9 @@ main:
     call addr
     call twobCheck  
     jmp endOfProg
+cont:
+    
+    
 operSize proc
     mov si, byteNum
     cmp [buffer+si], 66h
@@ -142,16 +145,16 @@ onebopcode_to_buffer:
     lea si, [oneb_opcodeStr+si]
     lea di, [comBuffer]
     rep movsb
-    call writeVivod
-    ret
+    jmp cont
+    
 twobopcode_to_buffer:    
     mov cx, 4
     shl si, 2
     lea si, [twob_opcodeStr+si]
     lea di, [comBuffer]
     rep movsb
-    call writeVivod
-    ret   
+    jmp cont
+
     
 writeVivod proc
     jmp endOfProg
