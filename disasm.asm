@@ -14,14 +14,13 @@ segSrt db 00h ,'ES','SS','FS','GS','CS','DS'
 segSet db 00h, 26h, 36h, 64h, 65h, 2Eh, 3Eh
 oneb_opcodeStr db '00000', 'LODSB', 'LODSW', 'LODSD', 'JA   ', 'JAE  ', 'JB   ', 'JBE  ', 'JCXZ ', 'JE   ', 'JG   ', 'JGE  ', 'JL   ', 'JLE  ',  'JNE  ', 'JNO  ', 'JNP  ', 'JNS  ', 'JO   ', 'JP   ', 'JS   '
 oneb_opcode db 00h, 0ACh, 0ADh, 77h, 73h, 72h, 76h, 0E3h, 74h, 7Fh, 7Dh, 7Ch, 7Eh, 75h, 71h, 7Bh, 79h, 70h, 7Ah, 78h
-twob_opcodeStr db '0000', 'BTR ', 'JA  ', 'JAE ', 'JB  ', 'JBE ', 'JE  ',  'JG  ', 'JGE ', 'JL  ', 'JLE ', 'JNB ', 'JNE ', 'JNLE', 'JNO ', 'JNP ' , 'JNS ', 'JO  ', 'JPE ', 'JS  '
+twob_opcodeStr db '00000', 'BTR  ', 'JA   ', 'JAE  ', 'JB   ', 'JBE  ', 'JE   ',  'JG   ', 'JGE  ', 'JL   ', 'JLE  ', 'JNB  ', 'JNE  ', 'JNLE ', 'JNO  ', 'JNP  ' , 'JNS  ', 'JO   ', 'JPE  ', 'JS   '
 twob_opcode db 00h, 0B3h, 0BAh, 87h, 83h, 82h, 86h, 84h, 8Fh, 8Dh, 8Ch, 8Eh, 83h, 85h, 8Fh, 81h, 8Bh, 89h, 80h, 8Ah, 88h
 .code
 start:
     mov ax, @data
     mov ds, ax
     mov es, ax
-    mov bp, 0111h
 
     mov ax,3D00h
     lea dx, com
@@ -37,6 +36,7 @@ start:
     int 21h
 
 main:
+    mov bp, 0111h
     call operSize
     mov cx, 6
     mov si, byteNum
@@ -46,7 +46,6 @@ main:
     call twobCheck  
     jmp endOfProg
 cont:
-    
     
 operSize proc
     mov si, byteNum
@@ -77,7 +76,7 @@ twobCheck proc
     mov si, byteNum
     cmp [buffer+si], 0Fh
     je equalTwob
-    mov cx, 19;//////////////////////////////////MUST BE 19
+    mov cx, 19d
     mov al, [buffer+si]
     call onebOpcode
     ret
@@ -112,7 +111,7 @@ equalTwob:
     inc byteNum
     mov si, byteNum
     mov al, [buffer+si]
-    mov cx, 20
+    mov cx, 20d
     call twobOpcode
 
 check_LODS:
@@ -145,22 +144,27 @@ onebopcode_to_buffer:
     lea si, [oneb_opcodeStr+si]
     lea di, [comBuffer]
     rep movsb
-    jmp cont
+    inc byteNum
+    jmp main;cont
     
 twobopcode_to_buffer:    
-    mov cx, 4
-    shl si, 2
+    mov cx, 5
+    imul si, 5
     lea si, [twob_opcodeStr+si]
     lea di, [comBuffer]
     rep movsb
-    jmp cont
+    inc byteNum
+    jmp main;cont
 
     
 writeVivod proc
-    jmp endOfProg
+    jmp main;end
+    
 writeVivod endp
     
-endOfProg:    
+endOfProg:
+    inc byteNum
+    jmp main;delete it    
     mov ah, 4ch
     int 21h
 end start

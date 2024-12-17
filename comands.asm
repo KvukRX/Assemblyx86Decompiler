@@ -3,8 +3,35 @@
 .code
 org 100h   
 start:
-lodsb
 
+
+
+db 73h,00h ;JAE or JNB or JNC
+db 72h,00h ;JB or JC or JNAE
+db 76h,00h ;JBE or JNA
+db 0E3h,00h ;JCXZ or JECXZ
+db 74h,00h ;JE or JZ
+db 7Fh,00h ;JG or JNLE
+db 7Dh,00h ;JGE or JNL
+db 7Ch,00h ;JL or JNGE
+db 7Eh,00h ;JLE or JNG
+db 75h,00h ;JNE or JNZ
+db 71h,00h ;JNO
+db 7Bh,00h ;JNP or JPO
+db 79h,00h ;JNS
+db 70h,00h ;JO
+db 7Ah,00h ;JP or JPE
+db 78h,00h ;JS
+db 77h,00h ;JA or JNBE  
+
+
+
+
+
+
+lodsb
+lodsw
+lodsd
 ;////////////////////////////// btr r16,imm8
 btr ax,1
 btr bx,1
@@ -54,23 +81,5 @@ btr [si],cx
 ;////////////////////////////// btr m16,imm6
 ;////////////////////////////// btr m32,imm6
 
-;////////////////////////////// short jcc
-
-db 73h,00h ;JAE or JNB or JNC
-db 72h,00h ;JB or JC or JNAE
-db 76h,00h ;JBE or JNA
-db 0E3h,00h ;JCXZ or JECXZ
-db 74h,00h ;JE or JZ
-db 7Fh,00h ;JG or JNLE
-db 7Dh,00h ;JGE or JNL
-db 7Ch,00h ;JL or JNGE
-db 7Eh,00h ;JLE or JNG
-db 75h,00h ;JNE or JNZ
-db 71h,00h ;JNO
-db 7Bh,00h ;JNP or JPO
-db 79h,00h ;JNS
-db 70h,00h ;JO
-db 7Ah,00h ;JP or JPE
-db 78h,00h ;JS
-db 77h,00h ;JA or JNBE   
+;////////////////////////////// short jcc 
 end start
