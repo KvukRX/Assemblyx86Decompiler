@@ -24,7 +24,24 @@ db 7Ah,00h ;JP or JPE
 db 78h,00h ;JS
 db 77h,00h ;JA or JNBE  
 
-
+db 0Fh, 87h, 0000h
+db 0Fh, 83h, 0000h
+db 0Fh, 82h, 0000h
+db 0Fh, 86h, 0000h
+db 0Fh, 84h, 0000h
+db 0Fh, 8Fh, 0000h
+db 0Fh, 8Dh, 0000h
+db 0Fh, 8Ch, 0000h
+db 0Fh, 8Eh, 0000h
+db 0Fh, 83h, 0000h
+db 0Fh, 85h, 0000h
+db 0Fh, 8Fh, 0000h
+db 0Fh, 81h, 0000h
+db 0Fh, 8Bh, 0000h
+db 0Fh, 89h, 0000h
+db 0Fh, 80h, 0000h
+db 0Fh, 8Ah, 0000h
+db 0Fh, 88h, 0000h
 
 
 

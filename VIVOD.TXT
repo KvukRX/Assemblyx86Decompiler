@@ -1,0 +1,20 @@
+JAE  	00
+JB   	00
+JBE  	00
+JCXZ 	00
+JE   	00
+JG   	00
+JGE  	00
+JL   	00
+JLE  	00
+JNE  	00
+JNO  	00
+JNP  	00
+JNS  	00
+JO   	00
+JP   	00
+JS   	00
+JA   	00
+LODSB
+LODSW
+LODSD

@@ -3,11 +3,11 @@
 .stack 100h
 .data
 com db 'comands.com',0
-discr db ?
+filename db "vivod.txt", 0
+discr dw ?
 buffer db 0BAh DUP(?)
 len dw $-buffer
-comBuffer db 5 DUP("$"), 09h
-regBuffer db 255 DUP(?)
+comBuffer db 5 DUP("$"), 09h, 248 DUP ("0"), 0ah
 byteNum dw 0h
 segNum dw ?
 segSrt db 00h ,'ES','SS','FS','GS','CS','DS'
@@ -34,8 +34,17 @@ start:
 
     mov ax, 3E00h
     int 21h
+    
+    mov     ah, 3ch
+    mov     cx, 0
+    mov     dx, offset filename
+    int     21h
+    mov     [discr], ax
 
 main:
+    mov bp, len
+    cmp byteNum, bp
+    je EXIT
     mov bp, 0111h
     call operSize
     mov cx, 6
@@ -119,6 +128,7 @@ check_LODS:
     je is_LODSW
     cmp si, 1
     je is_LODSB
+    add bp, 1000h
     jmp onebopcode_to_buffer
 is_LODSB:
     dec si
@@ -145,7 +155,10 @@ onebopcode_to_buffer:
     lea di, [comBuffer]
     rep movsb
     inc byteNum
-    jmp main;cont
+    cmp bp, 1000h
+    jnb oneBAddressJmp
+    mov dx, 5
+    jmp writeVivod;cont
     
 twobopcode_to_buffer:    
     mov cx, 5
@@ -156,15 +169,40 @@ twobopcode_to_buffer:
     inc byteNum
     jmp main;cont
 
+oneBAddressJmp:
+    mov si, byteNum
+    add [buffer+si], 30h
+    lea si, [buffer+si]
+    lea di, [comBuffer+6]
+    movsb
+    mov dx, 8
+    ;dec si
+    ;lea di, [comBuffer+7]
+    ;movsb
+    inc byteNum
+    jmp writeVivod
+twoBaddress:
     
-writeVivod proc
-    jmp main;end
-    
-writeVivod endp
+writeVivod:
+    mov     cx, dx
+    mov     ah, 040h
+    mov     bx, [discr]
+    lea     dx, comBuffer
+    int     21h
+    mov     ah, 040h
+    lea     dx, [comBuffer+254]
+    mov     bx, [discr]
+    mov     cx, 1d
+    int     21h
+    jmp     main
     
 endOfProg:
     inc byteNum
-    jmp main;delete it    
+    jmp main;delete it  
+EXIT:
+    mov ax, 3E00h
+    mov bx, discr
+    int 21h  
     mov ah, 4ch
     int 21h
 end start
