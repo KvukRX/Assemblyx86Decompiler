@@ -7,7 +7,7 @@ filename db "vivod.txt", 0
 discr dw ?
 buffer db 0BAh DUP(?)
 len dw $-buffer
-comBuffer db 5 DUP("$"), 09h, 248 DUP ("0"), 0ah
+comBuffer db 5 DUP("$"), 09h, 248 DUP (" "), 0ah
 byteNum dw 0h
 segNum dw ?
 segSrt db 00h ,'ES','SS','FS','GS','CS','DS'
@@ -159,7 +159,7 @@ onebopcode_to_buffer:
     rep movsb
     ;inc byteNum
     cmp bp, 1000h
-    jnb oneBAddressJmp
+    jnb oneBAddressJmpPrep
     mov dx, 5
     mov bp, 0
     jmp writeVivod;cont
@@ -175,19 +175,19 @@ twobopcode_to_buffer:
     inc byteNum
     jmp main;cont
 
-oneBAddressJmp:
+oneBAddressJmpPrep:    
     inc byteNum
     mov si, byteNum
-    ;add [buffer+si], 30h
-    ;lea si, [buffer+si]
-    ;lea di, [comBuffer+6]
-    ;movsb
     mov al, [buffer+si]
+oneBAddressJmp:
     cmp al, 10d
     jb  oneDigit
     cmp al, 100d
     jb  twoDigit
-    jmp threeDigit
+    cmp al, 127d
+    jbe threeDigit
+    jmp negativeOneB
+    ;jmp oneBAddressJmp
     ;mov dx, 8
     ;mov bp, 2
     ;dec si
@@ -200,29 +200,29 @@ oneBAddressJmp:
 oneDigit:
     aam
     add al, 30h
-    mov [comBuffer+6], al
-    mov dx, 7
-    mov bp, 1
+    mov [comBuffer+7], al
+    mov dx, 8
+    mov bp, 2
     jmp writeVivod
 twoDigit:
     aam
     add ax, 3030h
-    mov [comBuffer+7], al
-    mov [comBuffer+6], ah
-    mov dx, 8
-    mov bp, 2
+    mov [comBuffer+8], al
+    mov [comBuffer+7], ah
+    mov dx, 9
+    mov bp, 3
     jmp writeVivod
 threeDigit:
     aam
     add al, 30h
-    mov [comBuffer+8], al
+    mov [comBuffer+9], al
     mov al, ah
     aam
     add ax, 3030h
-    mov [comBuffer+7], al
-    mov [comBuffer+6], ah
-    mov dx, 9
-    mov bp, 3
+    mov [comBuffer+8], al
+    mov [comBuffer+7], ah
+    mov dx, 10
+    mov bp, 4
     jmp writeVivod
 twoBaddress:
     inc byteNum
@@ -250,25 +250,25 @@ not0Fh:
     jae fourDigitTwoB
     aam
     add al, 30h
-    mov [comBuffer+8], al
+    mov [comBuffer+9], al
     mov al, ah
     aam
     add ax, 3030h
-    mov [comBuffer+7], al
-    mov [comBuffer+6], ah
-    mov dx, 9
-    mov bp, 3
+    mov [comBuffer+8], al
+    mov [comBuffer+7], ah
+    mov dx, 10
+    mov bp, 4
     jmp writeVivod
 fourDigitTwoB:
     ;mov ax, word ptr [buffer+si]
     cmp ax, 10000d
     jae fiveDigitTwoB
-    mov dx, 10
-    mov bp, 4
-    jmp writeVivod 
-fiveDigitTwoB:
     mov dx, 11
     mov bp, 5
+    jmp writeVivod 
+fiveDigitTwoB:
+    mov dx, 12
+    mov bp, 6
     jmp writeVivod  
 writeVivod:
     inc     byteNum
@@ -288,10 +288,15 @@ writeVivod:
     mov     cx, bp
 clear:
     mov     si, cx
-    mov     [comBuffer+5+si], 30h
+    mov     [comBuffer+5+si], 20h
     loop    clear
     jmp     main
-    
+
+negativeOneB:
+    neg al
+    mov [comBuffer+6], '-'
+    jmp oneBAddressJmp
+
 endOfProg:
     inc byteNum
     jmp main;delete it  
