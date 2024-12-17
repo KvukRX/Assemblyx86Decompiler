@@ -140,10 +140,11 @@ is_LODSW:
     jmp onebopcode_to_buffer
 
 check_BTR:
-    cmp si, 1
+    mov di, si
+    cmp di, 1
     je twobopcode_to_buffer
     dec si
-    cmp si, 2
+    cmp di, 2
     jne prepTwoBJmp
     jmp twobopcode_to_buffer
 prepTwoBJmp:
@@ -189,7 +190,7 @@ oneBAddressJmp:
     jmp writeVivod
 twoBaddress:
     mov     dx, 10
-    mov     bp, 2 
+    mov     bp, 4 
     add     byteNum, 2
 writeVivod:
     mov     cx, dx
@@ -203,12 +204,12 @@ writeVivod:
     mov     cx, 1d
     int     21h
     ;inc     byteNum
-    ;cmp     bp, 0
-    ;je      main
-    ;mov     cx, bp
+    cmp     bp, 0
+    je      main
+    mov     cx, bp
 clear:
-    ;mov     [comBuffer+5], 30h
-    ;loop    clear
+    mov     [comBuffer+6], 30h
+    loop    clear
     jmp     main
     
 endOfProg:
