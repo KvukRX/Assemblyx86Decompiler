@@ -224,28 +224,24 @@ threeDigit:
     mov dx, 10
     mov bp, 4
     jmp writeVivod
+
 twoBaddress:
     inc byteNum
     mov si, byteNum
-    mov al, [buffer+si]
-    cmp al, 10d
-    jb  oneDigit
-    cmp al, 100d
-    jb  twoDigit
-    ;cmp al, 1000d
-    jmp  threeDigitTwoB
-    ;cmp ax, 10000d
-    ;jmp  fourDigitTwoB
-    ;jmp fiveDigitTwoB
-    ;mov     dx, 10
-    ;mov     bp, 4 
-    ;inc     byteNum
-threeDigitTwoB:
     mov ax, word ptr [buffer+si]
     cmp ah, 0Fh
-    jne  not0Fh
+    jne not0fTwoB
     mov ah, 0
-not0Fh:
+not0fTwoB:
+    cmp ah, 0
+    je  oneBAddressJmp
+    cmp ax, 0
+    jns threeDigitTwoB
+    cmp ax, -32768d
+    je  fiveDigitTwoB
+    neg ax
+    mov [comBuffer+6], '-'
+threeDigitTwoB:
     cmp ax, 1000d
     jae fourDigitTwoB
     aam
@@ -293,7 +289,9 @@ clear:
     jmp     main
 
 negativeOneB:
-    neg al
+    neg ax
+    cmp ax, 128d
+    je  threeDigit
     mov [comBuffer+6], '-'
     jmp oneBAddressJmp
 

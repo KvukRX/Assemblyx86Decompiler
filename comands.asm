@@ -4,25 +4,25 @@
 org 100h   
 start:
 
-db 0Fh, 87h, 00FFh
-db 0Fh, 83h, 0055h
-db 0Fh, 82h, 0045h
-db 0Fh, 86h, 0004h
-db 0Fh, 84h, 0005h
-db 0Fh, 8Fh, 0006h
-db 0Fh, 8Dh, 0007h
-db 0Fh, 8Ch, 0008h
-db 0Fh, 8Eh, 0009h
-db 0Fh, 83h, 000Ah
-db 0Fh, 85h, 000Bh
-db 0Fh, 8Fh, 000Dh
-db 0Fh, 81h, 000Eh
-db 0Fh, 8Bh, 000Fh
-db 0Fh, 89h, 0010h
-db 0Fh, 80h, 0011h
-db 0Fh, 8Ah, 0012h
-db 0Fh, 88h, 0013h
-db 0Fh, 88h, 0014h
+db 0Fh, 87h, 7Fh, 00h
+db 0Fh, 83h, 80h, 00h
+db 0Fh, 82h, 45h, 00h
+db 0Fh, 86h, 4h, 00h
+db 0Fh, 84h, 5h, 00h
+db 0Fh, 8Fh, 6h, 00h
+db 0Fh, 8Dh, 7h, 00h
+db 0Fh, 8Ch, 8h, 00h
+db 0Fh, 8Eh, 9h, 00h
+db 0Fh, 83h, 0Ah, 00h
+db 0Fh, 85h, 0Bh, 00h
+db 0Fh, 8Fh, 0Dh, 00h
+db 0Fh, 81h, 0Eh, 00h
+db 0Fh, 8Bh, 0Fh, 00h
+db 0Fh, 89h, 10h, 00h
+db 0Fh, 80h, 11h, 00h
+db 0Fh, 8Ah, 12h, 00h
+db 0Fh, 88h, 13h, 00h
+db 0Fh, 88h, 14h, 00h
 ;////////////////////////////// short jcc 
 
 db 73h,12h ;JAE or JNB or JNC

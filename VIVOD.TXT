@@ -1,5 +1,5 @@
-JA   	 255
-JNB  	 85
+JA   	 127
+JNB  	-128
 JB   	 69
 JBE  	 4
 JE   	 5
