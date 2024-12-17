@@ -14,7 +14,7 @@ segSrt db 00h ,'ES','SS','FS','GS','CS','DS'
 segSet db 00h, 26h, 36h, 64h, 65h, 2Eh, 3Eh
 oneb_opcodeStr db '00000', 'LODSB', 'LODSW', 'LODSD', 'JA   ', 'JAE  ', 'JB   ', 'JBE  ', 'JCXZ ', 'JE   ', 'JG   ', 'JGE  ', 'JL   ', 'JLE  ',  'JNE  ', 'JNO  ', 'JNP  ', 'JNS  ', 'JO   ', 'JP   ', 'JS   '
 oneb_opcode db 00h, 0ACh, 0ADh, 77h, 73h, 72h, 76h, 0E3h, 74h, 7Fh, 7Dh, 7Ch, 7Eh, 75h, 71h, 7Bh, 79h, 70h, 7Ah, 78h
-twob_opcodeStr db '00000', 'BTR  ', 'JA   ', 'JAE  ', 'JB   ', 'JBE  ', 'JE   ',  'JG   ', 'JGE  ', 'JL   ', 'JLE  ', 'JNB  ', 'JNE  ', 'JNLE ', 'JNO  ', 'JNP  ' , 'JNS  ', 'JO   ', 'JPE  ', 'JS   '
+twob_opcodeStr db '00000', 'BTR  ', 'JA   ', 'JAE  ', 'JB   ', 'JBE  ', 'JE   ',  'JG   ', 'JGE  ', 'JL   ', 'JLE  ', 'JNB  ', 'JNE  ', 'JNLE ', 'JNO  ', 'JNP  ', 'JNS  ', 'JO   ', 'JPE  ', 'JS   '
 twob_opcode db 00h, 0B3h, 0BAh, 87h, 83h, 82h, 86h, 84h, 8Fh, 8Dh, 8Ch, 8Eh, 83h, 85h, 8Fh, 81h, 8Bh, 89h, 80h, 8Ah, 88h
 .code
 start:
@@ -142,11 +142,13 @@ is_LODSW:
 check_BTR:
     cmp si, 1
     je twobopcode_to_buffer
-    cmp si, 2
-    jne twobopcode_to_buffer
     dec si
+    cmp si, 2
+    jne prepTwoBJmp
     jmp twobopcode_to_buffer
-
+prepTwoBJmp:
+    add bp, 1000h
+    jmp twobopcode_to_buffer
 onebopcode_to_buffer:
     inc si
     mov cx, 5
@@ -158,6 +160,7 @@ onebopcode_to_buffer:
     cmp bp, 1000h
     jnb oneBAddressJmp
     mov dx, 5
+    mov bp, 0
     jmp writeVivod;cont
     
 twobopcode_to_buffer:    
@@ -166,23 +169,28 @@ twobopcode_to_buffer:
     lea si, [twob_opcodeStr+si]
     lea di, [comBuffer]
     rep movsb
+    cmp bp, 1000h
+    jnb twoBaddress
     inc byteNum
     jmp main;cont
 
 oneBAddressJmp:
-    mov si, byteNum
-    add [buffer+si], 30h
-    lea si, [buffer+si]
-    lea di, [comBuffer+6]
-    movsb
+    ;mov si, byteNum
+    ;add [buffer+si], 30h
+    ;lea si, [buffer+si]
+    ;lea di, [comBuffer+6]
+    ;movsb
     mov dx, 8
+    mov bp, 2
     ;dec si
     ;lea di, [comBuffer+7]
     ;movsb
     inc byteNum
     jmp writeVivod
 twoBaddress:
-    
+    mov     dx, 10
+    mov     bp, 2 
+    add     byteNum, 2
 writeVivod:
     mov     cx, dx
     mov     ah, 040h
@@ -194,6 +202,13 @@ writeVivod:
     mov     bx, [discr]
     mov     cx, 1d
     int     21h
+    ;inc     byteNum
+    ;cmp     bp, 0
+    ;je      main
+    ;mov     cx, bp
+clear:
+    ;mov     [comBuffer+5], 30h
+    ;loop    clear
     jmp     main
     
 endOfProg:
