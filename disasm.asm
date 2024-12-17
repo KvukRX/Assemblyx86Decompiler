@@ -157,7 +157,7 @@ onebopcode_to_buffer:
     lea si, [oneb_opcodeStr+si]
     lea di, [comBuffer]
     rep movsb
-    inc byteNum
+    ;inc byteNum
     cmp bp, 1000h
     jnb oneBAddressJmp
     mov dx, 5
@@ -176,23 +176,102 @@ twobopcode_to_buffer:
     jmp main;cont
 
 oneBAddressJmp:
-    ;mov si, byteNum
+    inc byteNum
+    mov si, byteNum
     ;add [buffer+si], 30h
     ;lea si, [buffer+si]
     ;lea di, [comBuffer+6]
     ;movsb
-    mov dx, 8
-    mov bp, 2
+    mov al, [buffer+si]
+    cmp al, 10d
+    jb  oneDigit
+    cmp al, 100d
+    jb  twoDigit
+    jmp threeDigit
+    ;mov dx, 8
+    ;mov bp, 2
     ;dec si
     ;lea di, [comBuffer+7]
     ;movsb
-    inc byteNum
+    ;mov cx, 0
+    ;inc byteNum
+    ;jmp dispToStr
+    ;jmp writeVivod
+oneDigit:
+    aam
+    add al, 30h
+    mov [comBuffer+6], al
+    mov dx, 7
+    mov bp, 1
+    jmp writeVivod
+twoDigit:
+    aam
+    add ax, 3030h
+    mov [comBuffer+7], al
+    mov [comBuffer+6], ah
+    mov dx, 8
+    mov bp, 2
+    jmp writeVivod
+threeDigit:
+    aam
+    add al, 30h
+    mov [comBuffer+8], al
+    mov al, ah
+    aam
+    add ax, 3030h
+    mov [comBuffer+7], al
+    mov [comBuffer+6], ah
+    mov dx, 9
+    mov bp, 3
     jmp writeVivod
 twoBaddress:
-    mov     dx, 10
-    mov     bp, 4 
-    add     byteNum, 2
+    inc byteNum
+    mov si, byteNum
+    mov al, [buffer+si]
+    cmp al, 10d
+    jb  oneDigit
+    cmp al, 100d
+    jb  twoDigit
+    ;cmp al, 1000d
+    jmp  threeDigitTwoB
+    ;cmp ax, 10000d
+    ;jmp  fourDigitTwoB
+    ;jmp fiveDigitTwoB
+    ;mov     dx, 10
+    ;mov     bp, 4 
+    ;inc     byteNum
+threeDigitTwoB:
+    mov ax, word ptr [buffer+si]
+    cmp ah, 0Fh
+    jne  not0Fh
+    mov ah, 0
+not0Fh:
+    cmp ax, 1000d
+    jae fourDigitTwoB
+    aam
+    add al, 30h
+    mov [comBuffer+8], al
+    mov al, ah
+    aam
+    add ax, 3030h
+    mov [comBuffer+7], al
+    mov [comBuffer+6], ah
+    mov dx, 9
+    mov bp, 3
+    jmp writeVivod
+fourDigitTwoB:
+    ;mov ax, word ptr [buffer+si]
+    cmp ax, 10000d
+    jae fiveDigitTwoB
+    mov dx, 10
+    mov bp, 4
+    jmp writeVivod 
+fiveDigitTwoB:
+    mov dx, 11
+    mov bp, 5
+    jmp writeVivod  
 writeVivod:
+    inc     byteNum
     mov     cx, dx
     mov     ah, 040h
     mov     bx, [discr]
@@ -208,7 +287,8 @@ writeVivod:
     je      main
     mov     cx, bp
 clear:
-    mov     [comBuffer+6], 30h
+    mov     si, cx
+    mov     [comBuffer+5+si], 30h
     loop    clear
     jmp     main
     

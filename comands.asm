@@ -4,38 +4,35 @@
 org 100h   
 start:
 
-;////////////////////////////// long jcc 
-
-db 0Fh, 87h, 0000h
-db 0Fh, 83h, 0000h
-db 0Fh, 82h, 0000h
-db 0Fh, 86h, 0000h
-db 0Fh, 84h, 0000h
-db 0Fh, 8Fh, 0000h
-db 0Fh, 8Dh, 0000h
-db 0Fh, 8Ch, 0000h
-db 0Fh, 8Eh, 0000h
-db 0Fh, 83h, 0000h
-db 0Fh, 85h, 0000h
-db 0Fh, 8Fh, 0000h
-db 0Fh, 81h, 0000h
-db 0Fh, 8Bh, 0000h
-db 0Fh, 89h, 0000h
-db 0Fh, 80h, 0000h
-db 0Fh, 8Ah, 0000h
-db 0Fh, 88h, 0000h
-db 0Fh, 88h, 0000h
-
+db 0Fh, 87h, 00FFh
+db 0Fh, 83h, 0055h
+db 0Fh, 82h, 0045h
+db 0Fh, 86h, 0004h
+db 0Fh, 84h, 0005h
+db 0Fh, 8Fh, 0006h
+db 0Fh, 8Dh, 0007h
+db 0Fh, 8Ch, 0008h
+db 0Fh, 8Eh, 0009h
+db 0Fh, 83h, 000Ah
+db 0Fh, 85h, 000Bh
+db 0Fh, 8Fh, 000Dh
+db 0Fh, 81h, 000Eh
+db 0Fh, 8Bh, 000Fh
+db 0Fh, 89h, 0010h
+db 0Fh, 80h, 0011h
+db 0Fh, 8Ah, 0012h
+db 0Fh, 88h, 0013h
+db 0Fh, 88h, 0014h
 ;////////////////////////////// short jcc 
 
-db 73h,00h ;JAE or JNB or JNC
-db 72h,00h ;JB or JC or JNAE
-db 76h,00h ;JBE or JNA
-db 0E3h,00h ;JCXZ or JECXZ
-db 74h,00h ;JE or JZ
-db 7Fh,00h ;JG or JNLE
-db 7Dh,00h ;JGE or JNL
-db 7Ch,00h ;JL or JNGE
+db 73h,12h ;JAE or JNB or JNC
+db 72h,34h ;JB or JC or JNAE
+db 76h,56h ;JBE or JNA
+db 0E3h,78h ;JCXZ or JECXZ
+db 74h,9Ah ;JE or JZ
+db 7Fh,0BCh ;JG or JNLE
+db 7Dh,0DEh ;JGE or JNL
+db 7Ch,0Fh ;JL or JNGE
 db 7Eh,00h ;JLE or JNG
 db 75h,00h ;JNE or JNZ
 db 71h,00h ;JNO
@@ -50,57 +47,10 @@ lodsb
 lodsw
 lodsd
 
-
-;////////////////////////////// btr r16,imm8
-btr ax,1
-btr bx,1
-btr cx,1
-btr dx,1
-btr bp,1
-btr si,1
-btr di,1
-btr sp,1
-;////////////////////////////// btr 32,imm8
-btr eax,1
-btr ebx,1
-btr ecx,1
-btr edx,1
-btr ebp,1
-btr esi,1
-btr edi,1
-btr esp,1
-;////////////////////////////// btr r16,r16
-btr ax,bx
-btr bx,bx
-btr cx,bx
-btr dx,bx
-btr bp,bx
-btr si,bx
-btr di,bx
-btr sp,bx
-;////////////////////////////// btr r32,r32
-btr eax,ebx
-btr ebx,ebx
-btr ecx,ebx
-btr edx,ebx
-btr ebp,ebx
-btr esi,ebx
-btr edi,ebx
-btr esp,ebx
-;////////////////////////////// btr m16,r16
-btr [si],cx
-btr [si],cx
-btr [si],cx
-btr [si],cx
-btr [si],cx
-btr [si],cx
-btr [si],cx
-btr [si],cx
-
+;////////////////////////////// long jcc 
 
 ;////////////////////////////// btr m32,r32
 ;////////////////////////////// btr m16,imm6
 ;////////////////////////////// btr m32,imm6
-
 
 end start
