@@ -1,5 +1,5 @@
-JA   	 127
-JNB  	-128
+JA   	 999
+JNB  	-999
 JB   	 69
 JBE  	 4
 JE   	 5

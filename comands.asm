@@ -4,8 +4,10 @@
 org 100h   
 start:
 
-db 0Fh, 87h, 7Fh, 00h
-db 0Fh, 83h, 80h, 00h
+db 0Fh, 87h, 03h
+db 0E7h
+db 0Fh, 83h, 0FCh
+db 19h
 db 0Fh, 82h, 45h, 00h
 db 0Fh, 86h, 4h, 00h
 db 0Fh, 84h, 5h, 00h

@@ -235,6 +235,9 @@ twoBaddress:
 not0fTwoB:
     cmp ah, 0
     je  oneBAddressJmp
+    mov dl, ah
+    mov ah, al
+    mov al, dl
     cmp ax, 0
     jns threeDigitTwoB
     cmp ax, -32768d
@@ -244,14 +247,16 @@ not0fTwoB:
 threeDigitTwoB:
     cmp ax, 1000d
     jae fourDigitTwoB
-    aam
-    add al, 30h
-    mov [comBuffer+9], al
-    mov al, ah
-    aam
-    add ax, 3030h
-    mov [comBuffer+8], al
-    mov [comBuffer+7], ah
+    mov bx, 10
+    mov cx, 3
+    mov si, 7
+loop1:    
+    xor dx,dx
+    div bx
+    add dl, 30h 
+    mov [comBuffer+si], dl
+    inc si
+    loop loop1
     mov dx, 10
     mov bp, 4
     jmp writeVivod
