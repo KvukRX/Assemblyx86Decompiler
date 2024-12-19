@@ -4,12 +4,14 @@
 org 100h   
 start:
 
+db 0Fh, 82h, 80h
+db 00h
 db 0Fh, 87h, 03h
-db 0E7h
+db 0E9h
 db 0Fh, 83h, 0FCh
 db 19h
-db 0Fh, 82h, 45h, 00h
-db 0Fh, 86h, 4h, 00h
+db 0Fh, 86h, 7Fh
+db 0FFh
 db 0Fh, 84h, 5h, 00h
 db 0Fh, 8Fh, 6h, 00h
 db 0Fh, 8Dh, 7h, 00h
