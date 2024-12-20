@@ -5,7 +5,7 @@
 com db 'comands.com',0
 filename db "vivod.txt", 0
 discr dw ?
-buffer db 0BAh DUP(?)
+buffer db 0D8h DUP(?)
 len dw $-buffer
 comBuffer db 5 DUP("$"), 09h, 248 DUP (" "), 0ah
 byteNum dw 0h
@@ -157,12 +157,11 @@ onebopcode_to_buffer:
     lea si, [oneb_opcodeStr+si]
     lea di, [comBuffer]
     rep movsb
-    ;inc byteNum
     cmp bp, 1000h
     jnb oneBAddressJmpPrep
     mov dx, 5
     mov bp, 0
-    jmp writeVivod;cont
+    jmp writeVivod
     
 twobopcode_to_buffer:    
     mov cx, 5
@@ -187,16 +186,6 @@ oneBAddressJmp:
     cmp al, 127d
     jbe threeDigit
     jmp negativeOneB
-    ;jmp oneBAddressJmp
-    ;mov dx, 8
-    ;mov bp, 2
-    ;dec si
-    ;lea di, [comBuffer+7]
-    ;movsb
-    ;mov cx, 0
-    ;inc byteNum
-    ;jmp dispToStr
-    ;jmp writeVivod
 oneDigit:
     aam
     add al, 30h
@@ -229,17 +218,17 @@ twoBaddress:
     inc byteNum
     mov si, byteNum
     mov ax, word ptr [buffer+si]
-    cmp ah, 0Fh
-    jne not0fTwoB
-    mov ah, 0
+    ;cmp ah, 0Fh
+    ;jne not0fTwoB
+    ;mov ah, 0
 not0fTwoB:
-    mov dl, ah
-    mov ah, al
-    mov al, dl
+    ;mov dl, ah
+    ;mov ah, al
+    ;mov al, dl
     cmp ax, -32768d
     je  MaxNeg
-    cmp al, 0
-    je  oneBAddressJmp
+    ;cmp ah, 0
+    ;je  oneBAddressJmp
     cmp ax, 0
     jns threeDigitTwoB
 MaxNeg:
@@ -264,7 +253,6 @@ loop1:
     mov bp, 4
     jmp writeVivod
 fourDigitTwoB:
-    ;mov ax, word ptr [buffer+si]
     cmp ax, 10000d
     jae fiveDigitTwoB
     mov cx, 4
@@ -306,7 +294,6 @@ writeVivod:
     mov     bx, [discr]
     mov     cx, 1d
     int     21h
-    ;inc     byteNum
     cmp     bp, 0
     je      main
     mov     cx, bp
